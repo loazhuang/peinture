@@ -4,9 +4,9 @@ import { uploadToGradio } from "./hfService";
 import { API_MODEL_MAP } from "../constants";
 import { useAppStore } from "../store/appStore";
 
-const MS_BASE_URL = "https://api-inference.modelscope.cn/";
+const MS_BASE_URL = "https://api-inference.modelscope.ai/";
 const MS_GENERATE_ENDPOINT = `${MS_BASE_URL}v1/images/generations`;
-const MS_CHAT_API_URL = "https://api-inference.modelscope.cn/v1/chat/completions";
+const MS_CHAT_API_URL = "https://api-inference.modelscope.ai/v1/chat/completions";
 
 // Constants for image upload via HF Space
 const QWEN_EDIT_HF_BASE = "https://linoyts-qwen-image-edit-2509-fast.hf.space";
@@ -32,7 +32,7 @@ const runWithMsTokenRetry = async <T>(operation: (token: string) => Promise<T>):
   const tokens = useAppStore.getState().tokens.modelscope || [];
   
   if (tokens.length === 0) {
-      throw new Error("error_ms_token_required");
+      throw new 错误("error_ms_token_required");
   }
 
   let lastError: any;
@@ -60,7 +60,7 @@ const runWithMsTokenRetry = async <T>(operation: (token: string) => Promise<T>):
         error.message?.includes("429") ||
         error.status === 429 ||
         error.message?.includes("quota") ||
-        error.message?.includes("credit") ||
+        error。message?.includes("credit") ||
         error.message?.includes("Arrearage") ||
         error.message?.includes("Bill");
 
@@ -74,7 +74,7 @@ const runWithMsTokenRetry = async <T>(operation: (token: string) => Promise<T>):
     }
   }
   
-  throw lastError || new Error("error_api_connection");
+  throw lastError || new 错误("error_api_connection");
 };
 
 // --- Polling Helper for Async Tasks ---
@@ -83,7 +83,7 @@ const pollMsTask = async (taskId: string, token: string, signal?: AbortSignal): 
     const statusUrl = `${MS_BASE_URL}v1/tasks/${taskId}`;
     
     while (true) {
-        if (signal?.aborted) throw new Error("AbortError");
+        if (signal?.aborted) throw new 错误("AbortError");
 
         const response = await fetch(statusUrl, {
             headers: {
@@ -95,7 +95,7 @@ const pollMsTask = async (taskId: string, token: string, signal?: AbortSignal): 
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to check task status: ${response.status}`);
+            throw new 错误(`Failed to check task status: ${response.status}`);
         }
 
         const data = await response.json();
@@ -103,11 +103,11 @@ const pollMsTask = async (taskId: string, token: string, signal?: AbortSignal): 
 
         if (status === 'SUCCEED') {
             if (!data.output_images || data.output_images.length === 0) {
-                throw new Error("error_invalid_response");
+                throw new 错误("error_invalid_response");
             }
             return data.output_images;
         } else if (status === 'FAILED') {
-            throw new Error(data.message || "Model Scope generation task failed");
+            throw new 错误(data.message || "Model Scope generation task failed");
         }
 
         // Wait 5 seconds before next poll
